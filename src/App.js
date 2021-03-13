@@ -5,7 +5,7 @@ import firebaseConfig from './firebase.config';
 import { useState } from 'react';
 
 
-firebase.initializeApp(firebaseConfig);
+// firebase.initializeApp(firebaseConfig);
 
 if(!firebase.apps.length){
   firebase.initializeApp(firebaseConfig); 
@@ -17,6 +17,7 @@ function App() {
     isSignedIn: false,
     name: '',
     email: ' ',
+    password: ' ',
     photo: ' '
   });
 
@@ -60,6 +61,29 @@ function App() {
     })
   }
 
+  //formSubmit 
+  const handleSubmit = () => {
+
+  }
+
+  //onBlur 
+  const handleBlur = (e) => {
+    let isFormValid = true;
+    if(e.target.name === 'email'){
+     isFormValid = /\S+@\S+\.\S+/.test(e.target.value);
+    }
+    if(e.target.name === 'password'){
+      const isPassValid = e.target.value.length > 6;
+      const isPassHasNum = /\d{1}/.test(e.target.value);
+      isFormValid = (isPassValid && isPassHasNum);
+    }
+    if(isFormValid){
+      const newUserInfo = {...user};
+      newUserInfo[e.target.name] = e.target.value;
+      setUser(newUserInfo);
+    }
+  }
+
   return (
     <div className="App">
       {
@@ -74,6 +98,22 @@ function App() {
           <img src={user.photo} alt=""/>
         </div>
       }
+
+
+      <h1>our own authentication</h1>
+      <p>name: {user.name}</p>
+      <p>email: {user.email}</p>
+      <p>password: {user.password}</p>
+      <form onSubmit={handleSubmit}>
+        <input name="name" type="text" onBlur={handleBlur} placeholder="Name" />
+        <br/>
+      <input type="text" name="email" onBlur={handleBlur} placeholder="Email" />
+      <br/>
+      <input type="password" name="password" onBlur={handleBlur} placeholder="Password" />
+      <br/>
+      <input type="submit" value="Submit"/>
+      </form>
+
     </div>
   );
 }
